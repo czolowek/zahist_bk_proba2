@@ -1,0 +1,10 @@
+flask
+flask-cors
+flask-restful
+flask-migrate
+flask-jwt-extended
+flask-sqlalchemy
+python-dotenv
+requests
+flask-wtf
+wtforms
