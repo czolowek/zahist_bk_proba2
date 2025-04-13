@@ -9,13 +9,13 @@ def get_products(url: str = URL):
     session = HTMLSession()
     response = session.get(url)
 
-    # Проверяем статус ответа
+
     if response.status_code != 200:
         print(f"Ошибка: Сервер вернул статус {response.status_code}")
         print(response.text)  # Для отладки
         return
 
-    # Парсим ссылки на товары
+
     try:
         products = response.html.xpath('//a[contains(@class, "goods-tile__heading")]/@href')
     except Exception as e:
@@ -32,13 +32,12 @@ def save_product(url: str):
     session = HTMLSession()
     response = session.get(url)
 
-    # Проверяем статус ответа
+
     if response.status_code != 200:
         print(f"Ошибка: Сервер вернул статус {response.status_code}")
-        print(response.text)  # Для отладки
+        print(response.text)  
         return
 
-    # Парсим данные о товаре
     try:
         name = response.html.xpath('//h1[contains(@class, "product__title")]/text()')[0].strip()
         price = response.html.xpath('//p[contains(@class, "product-prices__big")]/text()')[0].strip().replace(u"\xa0", "")
@@ -46,7 +45,6 @@ def save_product(url: str):
         description = response.html.xpath('//div[contains(@class, "product-about__description")]/text()')
         description = ''.join(description).strip() if description else "Описание отсутствует"
 
-        # Создаем объект товара
         product = Product(
             id=uuid4().hex,
             name=name,
