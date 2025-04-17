@@ -18,7 +18,12 @@ db.init_app(app)
 api = Api(app)
 migrate = Migrate(app, db)
 
-
+@app.errorhandler(Exception)
+def handle_exception(e):
+    response = {
+        "error": str(e)
+    }
+    return jsonify(response), 500
 
 # with app.app_context():
 #     db.create_all()
@@ -73,16 +78,19 @@ class ProductAPI(Resource):
         return response
     
 class UserAPI(Resource):
-    def post(self,product_id: str):
+    def post(self, product_id: str):
         parser = reqparse.RequestParser()
-        parser.add_argument("name")
+        parser.add_argument("name", required=True, help="Поле 'name' обязательно.")
         kwargs = parser.parse_args()
+
+        # Передаём аргумент 'name' в функцию buy_product
         msg = db_actions.buy_product(product_id, **kwargs)
         response = jsonify(msg)
         response.status_code = 201
         return response
-    
-api.add_resource(ProductAPI, "/api/products", "/api/products/<product_id>/")
+
+
+api.add_resource(ProductAPI, "/api/products/", "/api/products/<product_id>/")
 api.add_resource(UserAPI, "/api/users/<product_id>/")
 
 if __name__ == "__main__":

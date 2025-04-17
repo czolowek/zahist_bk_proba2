@@ -10,11 +10,16 @@ from src.database.associative_tables import user_product_assoc
 
 @dataclass
 class Review(db.Model):
-    __tablename__ = "reviews"
+    __tablename__ = 'reviews'
 
-    id: Mapped[str] = mapped_column(String(), primary_key=True)
-    text: Mapped[str] = mapped_column(String())
-    product_id: Mapped[str] = mapped_column(ForeignKey("products.id"))
+    id = Column(String, primary_key=True)
+    text = Column(String, nullable=False)
+    user_id = Column(String, ForeignKey('users.id'), nullable=False)
+    product_id = Column(String, ForeignKey('products.id'), nullable=False)
+
+    # Определяем отношения
+    user = relationship("User", back_populates="reviews")
+    product = relationship("Product", back_populates="reviews")
 
 
 

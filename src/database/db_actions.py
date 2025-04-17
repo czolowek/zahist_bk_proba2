@@ -5,7 +5,7 @@ from src.database.models import Product, Review, User
 
 
 def get_products():
-    products = Product.query.all()
+   return Product.query.all()
     
 
 def get_product(product_id: str):
@@ -46,22 +46,23 @@ def add_review_product(product_id: str, text: str, name: str) -> str:
     user = User.query.filter_by(name=name).first()
     if not user:
         user = User(id=uuid4().hex, name=name)
+        db.session.add(user)
 
     review = Review(id=uuid4().hex, text=text, user=user)
     product = Product.query.filter_by(id=product_id).one_or_404()
     product.reviews.append(review)
     db.session.commit()
-    return f"відгук  успішно додано до товару'"
+    return {"message": f"Отзыв успешно добавлен к товару '{product_id}'"}
 
 
-def buy_product(product_id: str, name: str) -> str:
+def buy_product(product_id: str, name: str) -> dict:
     product = Product.query.filter_by(id=product_id).one_or_404()
 
     user = User.query.filter_by(name=name).first()
     if not user:
         user = User(id=uuid4().hex, name=name)
+        db.session.add(user)
 
     user.products.append(product)
-    db.session.add(user)
     db.session.commit()
-    return f"товар '{product.name}' успішно куплено"
+    return {"message": f"Товар '{product.name}' успешно куплен пользователем '{name}'"}
