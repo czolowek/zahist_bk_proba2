@@ -28,15 +28,18 @@ migrate = Migrate(app, db)
 
 class ProductAPI(Resource):
     def get(self, product_id: Optional[str] = None):
-        if product_id:
-            product = db_actions.get_product(product_id)
-            response = jsonify(product)
-        else:
-            products = db_actions.get_products()
-            response = jsonify(products)
+        try:
+            if product_id:
+                product = db_actions.get_product(product_id)
+                response = jsonify(product)
+            else:
+                products = db_actions.get_products()
+                response = jsonify(products)
 
-        response.status_code = 200
-        return response
+            response.status_code = 200
+            return response
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
     
     def post(self):
         parser = reqparse.RequestParser()

@@ -5,7 +5,17 @@ from src.database.models import Product, Review, User
 
 
 def get_products():
-   return Product.query.all()
+    products = Product.query.all()
+    return [
+        {
+            "id": product.id,
+            "name": product.name,
+            "description": product.description,
+            "price": product.price,
+            "img_url": product.img_url
+        }
+        for product in products
+    ]
     
 
 def get_product(product_id: str):
