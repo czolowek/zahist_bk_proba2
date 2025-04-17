@@ -18,12 +18,7 @@ db.init_app(app)
 api = Api(app)
 migrate = Migrate(app, db)
 
-@app.errorhandler(Exception)
-def handle_exception(e):
-    response = {
-        "error": str(e)
-    }
-    return jsonify(response), 500
+
 
 # with app.app_context():
 #     db.create_all()
@@ -88,8 +83,7 @@ class UserAPI(Resource):
         response = jsonify(msg)
         response.status_code = 201
         return response
-
-
+    
 api.add_resource(ProductAPI, "/api/products/", "/api/products/<product_id>/")
 api.add_resource(UserAPI, "/api/users/<product_id>/")
 

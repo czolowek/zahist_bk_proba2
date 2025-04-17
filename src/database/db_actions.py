@@ -9,7 +9,14 @@ def get_products():
     
 
 def get_product(product_id: str):
-    return Product.query.filter_by(id=product_id).one_or_404()
+    product = Product.query.filter_by(id=product_id).one_or_404()
+    return {
+        "id": product.id,
+        "name": product.name,
+        "description": product.description,
+        "price": product.price,
+        "img_url": product.img_url
+    }
 
 def add_product(name: str, description: str, price: float, img_url: str):
     product = Product(
